@@ -49,19 +49,42 @@ public class B_Huffman {
         System.out.println(result);
     }
 
+
+
     String decode(InputStream inputStream) throws FileNotFoundException {
         StringBuilder result = new StringBuilder();
-        //прочитаем строку для кодирования из тестового файла
+
         Scanner scanner = new Scanner(inputStream);
-        Integer count = scanner.nextInt();
-        Integer length = scanner.nextInt();
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! НАЧАЛО ЗАДАЧИ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        //тут запишите ваше решение
 
+        int count = scanner.nextInt();
+        int length = scanner.nextInt();
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! КОНЕЦ ЗАДАЧИ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        return result.toString(); //01001100100111
+        String[] letters = new String[count];
+        String[] codes = new String[count];
+
+        for (int i = 0; i < count; i++) {
+            String letter = scanner.next();
+            letters[i] = letter.substring(0, 1);
+
+            codes[i] = scanner.next();
+        }
+
+        String encoded = scanner.next();
+
+        StringBuilder currentCode = new StringBuilder();
+
+        for (int i = 0; i < encoded.length(); i++) {
+            currentCode.append(encoded.charAt(i));
+
+            for (int j = 0; j < count; j++) {
+                if (currentCode.toString().equals(codes[j])) {
+                    result.append(letters[j]);
+                    currentCode.setLength(0);
+                    break;
+                }
+            }
+        }
+
+        return result.toString();
     }
-
-
 }
