@@ -40,37 +40,102 @@ public class C_QSortOptimized {
         }
     }
 
+
     int[] getAccessory2(InputStream stream) throws FileNotFoundException {
-        //подготовка к чтению данных
         Scanner scanner = new Scanner(stream);
-        //!!!!!!!!!!!!!!!!!!!!!!!!! НАЧАЛО ЗАДАЧИ !!!!!!!!!!!!!!!!!!!!!!!!!
-        //число отрезков отсортированного массива
+
         int n = scanner.nextInt();
         Segment[] segments = new Segment[n];
-        //число точек
+
         int m = scanner.nextInt();
         int[] points = new int[m];
         int[] result = new int[m];
 
-        //читаем сами отрезки
         for (int i = 0; i < n; i++) {
-            //читаем начало и конец каждого отрезка
             segments[i] = new Segment(scanner.nextInt(), scanner.nextInt());
         }
-        //читаем точки
+
         for (int i = 0; i < m; i++) {
             points[i] = scanner.nextInt();
         }
-        //тут реализуйте логику задачи с применением быстрой сортировки
-        //в классе отрезка Segment реализуйте нужный для этой задачи компаратор
 
+        quickSort(segments, 0, n - 1);
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
+        for (int i = 0; i < m; i++) {
+            int point = points[i];
+
+            int pos = upperBound(segments, point);
+
+            int count = 0;
+
+            for (int j = 0; j < pos; j++) {
+                if (segments[j].stop >= point) {
+                    count++;
+                }
+            }
+
+            result[i] = count;
+        }
+
+        scanner.close();
         return result;
     }
 
-    //отрезок
-    private class Segment implements Comparable {
+    private int upperBound(Segment[] segments, int point) {
+        int left = 0;
+        int right = segments.length;
+
+        while (left < right) {
+            int middle = left + (right - left) / 2;
+
+            if (segments[middle].start <= point) {
+                left = middle + 1;
+            } else {
+                right = middle;
+            }
+        }
+
+        return left;
+    }
+
+    private void quickSort(Segment[] segments, int left, int right) {
+        while (left < right) {
+
+            Segment pivot = segments[left + (right - left) / 2];
+
+            int lt = left;
+            int i = left;
+            int gt = right;
+
+            while (i <= gt) {
+                int cmp = segments[i].compareTo(pivot);
+
+                if (cmp < 0) {
+                    Segment temp = segments[lt];
+                    segments[lt] = segments[i];
+                    segments[i] = temp;
+
+                    lt++;
+                    i++;
+                } else if (cmp > 0) {
+                    Segment temp = segments[i];
+                    segments[i] = segments[gt];
+                    segments[gt] = temp;
+                    gt--;
+                } else {
+                    i++;
+                }
+            }
+            if (lt - left < right - gt) {
+                quickSort(segments, left, lt - 1);
+                left = gt + 1;
+            } else {
+                quickSort(segments, gt + 1, right);
+                right = lt - 1;
+            }
+        }
+    }
+    private class Segment implements Comparable<Segment> {
         int start;
         int stop;
 
@@ -80,10 +145,16 @@ public class C_QSortOptimized {
         }
 
         @Override
-        public int compareTo(Object o) {
-            //подумайте, что должен возвращать компаратор отрезков
-            return 0;
+        public int compareTo(Segment o) {
+            int cmp = Integer.compare(this.start, o.start);
+
+            if (cmp == 0) {
+                return Integer.compare(this.stop, o.stop);
+            }
+
+            return cmp;
         }
     }
+
 
 }

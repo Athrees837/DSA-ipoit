@@ -40,13 +40,22 @@ public class C_Stairs {
         for (int i = 0; i < n; i++) {
             stairs[i]=scanner.nextInt();
         }
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        int result = 0;
+        int[] dp = new int[n + 1];
 
+        dp[0] = 0;
 
+        for (int i = 1; i <= n; i++) {
 
+            // Можно прийти с предыдущей ступеньки
+            int fromOne = dp[i - 1];
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
+            // Можно прийти с предпоследней ступеньки
+            int fromTwo = (i >= 2) ? dp[i - 2] : Integer.MIN_VALUE;
+
+            dp[i] = Math.max(fromOne, fromTwo) + stairs[i - 1];
+        }
+
+        int result = dp[n];
         return result;
     }
 

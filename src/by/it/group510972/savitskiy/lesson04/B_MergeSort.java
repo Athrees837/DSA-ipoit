@@ -31,27 +31,65 @@ public class B_MergeSort {
         }
     }
 
-    int[] getMergeSort(InputStream stream) throws FileNotFoundException {
-        //подготовка к чтению данных
-        Scanner scanner = new Scanner(stream);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
 
-        //размер массива
+    int[] getMergeSort(InputStream stream) throws FileNotFoundException {
+        // Подготовка к чтению данных
+        Scanner scanner = new Scanner(stream);
+
+        // Размер массива
         int n = scanner.nextInt();
-        //сам массив
+
+        // Сам массив
         int[] a = new int[n];
+
         for (int i = 0; i < n; i++) {
             a[i] = scanner.nextInt();
-            System.out.println(a[i]);
         }
 
-        // тут ваше решение (реализуйте сортировку слиянием)
-        // https://ru.wikipedia.org/wiki/Сортировка_слиянием
+        // Сортировка слиянием
+        mergeSort(a, 0, n - 1);
 
-
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
         return a;
     }
+    void mergeSort(int[] a, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = left + (right - left) / 2;
+        mergeSort(a, left, mid);
+        mergeSort(a, mid + 1, right);
+        merge(a, left, mid, right);
+    }
+    void merge(int[] a, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left;
+        int j = mid + 1;
+        int k = 0;
+        while (i <= mid && j <= right) {
+            if (a[i] <= a[j]) {
+                temp[k] = a[i];
+                i++;
+            } else {
+                temp[k] = a[j];
+                j++;
+            }
+            k++;
+        }
+        while (i <= mid) {
+            temp[k] = a[i];
+            i++;
+            k++;
+        }
+        while (j <= right) {
+            temp[k] = a[j];
+            j++;
+            k++;
+        }
+        for (int p = 0; p < temp.length; p++) {
+            a[left + p] = temp[p];
+        }
+    }
+
 
 
 }
